@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_weight">30dp</dimen>
+    <dimen name="icon_margin_LR">20dp</dimen>
+    <dimen name="platter_weight">200dp</dimen>
+</resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimaryDark"
+        app:contentInsetStart="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="40dp"
+                android:src="@drawable/ic_back"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="私人FM"
+                android:textColor="@color/text_white"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="跑步FM"
+                android:textColor="@color/text_white"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/ic_more"/>
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6">
+
+        <com.cye.musicuitest.widget.CircleImage
+            android:layout_width="@dimen/platter_weight"
+            android:layout_height="@dimen/platter_weight"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            app:border_color="@color/bg_white"
+            app:border_width="2dp"
+            android:src="@mipmap/zhang"/>
+
+    </FrameLayout>
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="@dimen/icon_weight"
+            android:layout_height="@dimen/icon_weight"
+            android:layout_marginLeft="@dimen/icon_margin_LR"
+            android:layout_marginRight="@dimen/icon_margin_LR"
+            android:src="@drawable/ic_delet"/>
+        <ImageView
+            android:layout_width="@dimen/icon_weight"
+            android:layout_height="@dimen/icon_weight"
+            android:layout_marginLeft="@dimen/icon_margin_LR"
+            android:layout_marginRight="@dimen/icon_margin_LR"
+            android:src="@drawable/ic_heart"/>
+        <ImageView
+            android:layout_width="@dimen/icon_weight"
+            android:layout_height="@dimen/icon_weight"
+            android:layout_marginLeft="@dimen/icon_margin_LR"
+            android:layout_marginRight="@dimen/icon_margin_LR"
+            android:src="@drawable/ic_play"/>
+        <ImageView
+            android:layout_width="@dimen/icon_weight"
+            android:layout_height="@dimen/icon_weight"
+            android:layout_marginLeft="@dimen/icon_margin_LR"
+            android:layout_marginRight="@dimen/icon_margin_LR"
+            android:src="@drawable/ic_next"/>
+        <ImageView
+            android:layout_width="@dimen/icon_weight"
+            android:layout_height="@dimen/icon_weight"
+            android:layout_marginLeft="@dimen/icon_margin_LR"
+            android:layout_marginRight="@dimen/icon_margin_LR"
+            android:src="@drawable/ic_comment"/>
+    </LinearLayout>
+
+</LinearLayout>
