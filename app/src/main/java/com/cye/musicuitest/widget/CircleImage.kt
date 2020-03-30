@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.cye.musicuitest.R
 
 
-class CircleImage :AppCompatImageView{
+open class CircleImage :AppCompatImageView{
 
     private var borderColor:Int = 0
     private var borderWidth = 0f

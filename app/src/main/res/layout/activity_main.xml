@@ -53,7 +53,13 @@
         android:layout_height="0dp"
         android:layout_weight="6">
 
-        <com.cye.musicuitest.widget.CircleImage
+        <ImageView
+            android:id="@+id/platter_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.cye.musicuitest.widget.PlatterView
+            android:id="@+id/platter_view"
             android:layout_width="@dimen/platter_weight"
             android:layout_height="@dimen/platter_weight"
             android:layout_gravity="center"
@@ -87,8 +93,9 @@
             android:layout_marginRight="@dimen/icon_margin_LR"
             android:src="@drawable/ic_heart"/>
         <ImageView
-            android:layout_width="@dimen/icon_weight"
-            android:layout_height="@dimen/icon_weight"
+            android:id="@+id/btn_play"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="@dimen/icon_margin_LR"
             android:layout_marginRight="@dimen/icon_margin_LR"
             android:src="@drawable/ic_play"/>
