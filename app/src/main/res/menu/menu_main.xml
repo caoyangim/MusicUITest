@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/Ancient"
+        android:title="Ancient"/>
+    <item android:id="@+id/BlastBass"
+        android:title="blastBass"/>
+    <item android:id="@+id/Electronic"
+        android:title="electronic"/>
+    <item android:id="@+id/Histogram"
+        android:title="histogram"/>
+    <item android:id="@+id/Lonely"
+        android:title="lonely"/>
+    <item android:id="@+id/Reverberation"
+        android:title="reverberation"/>
+    <item android:id="@+id/Surround"
+        android:title="surround"/>
+    <item android:id="@+id/Valve"
+        android:title="valve"/>
+
+</menu>

@@ -9,6 +9,7 @@ class MediaPlayerHelp private constructor(val context: Context ) {
     private val mediaPlayer:MediaPlayer = MediaPlayer()
     private var path:String? = null
     private lateinit var onMediaPlayerHelperListener:OnMediaPlayerHelperListener
+    private lateinit var onErrorListener:OnMediaPlayerHelperErrorListener
 
     companion object : SingletonHolder<MediaPlayerHelp, Context>(::MediaPlayerHelp)
 
@@ -19,11 +20,20 @@ class MediaPlayerHelp private constructor(val context: Context ) {
             mediaPlayer.reset()
         }
         this.path = path
-        mediaPlayer.setDataSource(path)
         Log.d("MediaPlayerHelp》》》","最終文件的播放源:$path")
-        mediaPlayer.prepareAsync()
+        try {
+            mediaPlayer.setDataSource(path)
+            mediaPlayer.prepareAsync()
+        }catch (e:Exception){
+            onErrorListener.onError("地址无效")
+        }
         mediaPlayer.setOnPreparedListener {
             onMediaPlayerHelperListener.onPrepared(it)
+        }
+        mediaPlayer.setOnErrorListener { mp, what, extra ->
+            Log.d("MediaPlayerHelp", "OnError - Error code: $what Extra code: $extra")
+            onErrorListener.onError("地址无效，播放失败")
+            false
         }
         mediaPlayer.isLooping = true
     }
@@ -70,8 +80,16 @@ class MediaPlayerHelp private constructor(val context: Context ) {
         fun onPrepared(mp:MediaPlayer)
     }
 
+    interface OnMediaPlayerHelperErrorListener{
+        fun onError(msg:String)
+    }
+
     fun setOnMediaPlayerHelperListener(listener:OnMediaPlayerHelperListener){
         onMediaPlayerHelperListener = listener
+    }
+
+    fun setOnMediaPlayerHelperErrorListener(listener: OnMediaPlayerHelperErrorListener){
+        onErrorListener = listener
     }
 
     /**

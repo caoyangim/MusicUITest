@@ -28,11 +28,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:gravity="center">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="40dp"
-                    android:src="@drawable/ic_back"/>
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -47,11 +43,7 @@
                     android:gravity="center"
                     android:text="跑步FM"
                     android:textColor="@color/text_white"/>
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="40dp"
-                    android:src="@drawable/ic_more"/>
+
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -60,6 +52,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="6">
+
+            <com.cye.musicuitest.widget.EffectView
+                android:id="@+id/effect"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <com.cye.musicuitest.widget.PlatterView
                 android:id="@+id/platter_view"
@@ -109,11 +106,12 @@
                 android:layout_marginRight="@dimen/icon_margin_LR"
                 android:src="@drawable/ic_next"/>
             <ImageView
+                android:id="@+id/btn_list"
                 android:layout_width="@dimen/icon_weight"
                 android:layout_height="@dimen/icon_weight"
                 android:layout_marginLeft="@dimen/icon_margin_LR"
                 android:layout_marginRight="@dimen/icon_margin_LR"
-                android:src="@drawable/ic_comment"/>
+                android:src="@drawable/ic_list"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -8,25 +8,36 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cye.musicuitest.helpes.MediaPlayerHelp
+import com.cye.musicuitest.utils.MusicUtil
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.system.exitProcess
+import android.widget.PopupWindow
+import android.view.Gravity
+import android.content.Context
+import android.view.LayoutInflater
+import android.graphics.drawable.BitmapDrawable
+import android.view.WindowManager
+import androidx.appcompat.app.ActionBar
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mediaPlayerHelp:MediaPlayerHelp
-    var isPlaying = false
+    private var isPlaying = false
     lateinit var path:String
     private val timer = Timer()
     private var visualizer:Visualizer? = null
+    private var isMenu = false
+
     private val PERMISSIONS = arrayOf<String>(
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.MODIFY_AUDIO_SETTINGS
@@ -37,10 +48,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1)
         initView()
+        initData()
         initMediaPlay()
         initAnimator()
         initVisualizer()
+    }
 
+    private fun initData() {
+        val musicData = MusicUtil.getMusicData(this)
+        Log.e("Music",","+musicData[0].toString()+musicData.size)
+        btn_list.setOnClickListener {
+            showPopupWindow()
+        }
     }
 
     private fun initView() {
@@ -48,9 +67,25 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         //隐藏状态栏
         //window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        toolbar.setNavigationIcon(R.drawable.ic_back)
+        //背景模糊
         Glide.with(this).load(R.mipmap.zhang)
             .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 50)))
             .into(main_bg)
+        toolbar.inflateMenu(R.menu.menu_main)
+        toolbar.setOnMenuItemClickListener{
+            when(it.itemId){
+                R.id.Ancient -> effect.setAncientEffectDrawable()
+                R.id.BlastBass -> effect.setBlastBassEffectDrawable()
+                R.id.Electronic -> effect.setElectronicEffectDrawable()
+                R.id.Histogram -> effect.setHistogramEffectDrawablee()
+                R.id.Lonely -> effect.setLonelyEffectDrawable()
+                R.id.Reverberation -> effect.setReverberationEffectDrawable()
+                R.id.Surround -> effect.setSurroundEffectDrawable()
+                R.id.Valve -> effect.setValveEffectDrawable()
+            }
+            true
+        }
     }
 
     private fun initSeekBar() {
@@ -81,21 +116,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun initMediaPlay() {
         val extSD = Environment.getExternalStorageDirectory().path
-//        path = "$extSD/netease/cloudmusic/Music/qifengle.m4a"
+  //      path = "$extSD/Music/qifengle2.m4a"
         path = "$extSD/netease/cloudmusic/Music/张学友 - 约定 (live).mp3"
         mediaPlayerHelp = MediaPlayerHelp.getInstance(this)
+        mediaPlayerHelp.setOnMediaPlayerHelperErrorListener(object : MediaPlayerHelp.OnMediaPlayerHelperErrorListener{
+            override fun onError(msg: String) {
+                Toast.makeText(applicationContext,msg,Toast.LENGTH_SHORT).show()
+            }
+        })
+        play()
     }
 
     private fun initAnimator() {
         btn_play.setOnClickListener{
             if (isPlaying){
-                stopMusic()
-                stopAnima()
+                stop()
             }else{
-                playMusic(path)
-                playAnima()
+                play()
             }
         }
+    }
+
+    private fun stop() {
+        stopMusic()
+        stopAnima()
+        isPlaying = false
+    }
+
+    private fun play() {
+        playMusic(path)
+        playAnima()
+        isPlaying = true
     }
 
     private fun restartMusic(){
@@ -124,7 +175,6 @@ class MainActivity : AppCompatActivity() {
         //动画
         platter_view.playAnimation()
         btn_play.setImageDrawable(resources.getDrawable(R.drawable.ic_suspend))
-        isPlaying = true
     }
 
 
@@ -137,7 +187,6 @@ class MainActivity : AppCompatActivity() {
         //动画
         platter_view.pauseAnimation()
         btn_play.setImageDrawable(resources.getDrawable(R.drawable.ic_play))
-        isPlaying = false
     }
 
     override fun onDestroy() {
@@ -151,14 +200,17 @@ class MainActivity : AppCompatActivity() {
     private val dataCaptureListener: OnDataCaptureListener = object : OnDataCaptureListener {
         override fun onWaveFormDataCapture( visualizer: Visualizer, waveform: ByteArray, samplingRate: Int) {
             //audioView.post(Runnable { audioView.setWaveData(waveform) })
+            effect.onWaveCall(waveform)
         }
 
         override fun onFftDataCapture(visualizer: Visualizer, fft: ByteArray, samplingRate: Int) {
             //audioView2.post(Runnable { audioView2.setWaveData(fft) })
+            effect.onCall(fft)
         }
     }
 
     private fun initVisualizer() {
+        ActivityCompat.requestPermissions(this, PERMISSIONS, 1)
         try {
             val mediaPlayerId: Int = mediaPlayerHelp.getMediaPlayerId()
             visualizer?.release()
@@ -174,6 +226,44 @@ class MainActivity : AppCompatActivity() {
             visualizer?.setEnabled(true)
         } catch (e: Exception) {
             Log.e("initVisualizer Error", "请检查录音权限")
+        }
+        effect.setSurroundEffectDrawable()
+    }
+
+    private var popupWindow: PopupWindow? = null
+    private fun showPopupWindow() {
+        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val vPopupWindow = inflater.inflate(R.layout.pop_music_list, null, false)//引入弹窗布局
+        popupWindow = PopupWindow(
+            vPopupWindow,
+            ActionBar.LayoutParams.MATCH_PARENT,
+            400,
+            true
+        )
+
+        //设置背景透明
+       // addBackground()
+        //设置进出动画
+        popupWindow?.animationStyle = R.style.PopupWindowAnimation
+
+        popupWindow?.setBackgroundDrawable(BitmapDrawable()) // 响应返回键必须的语句
+        //引入依附的布局
+        val parentView =
+            LayoutInflater.from(this@MainActivity).inflate(R.layout.activity_main, null)
+        //相对于父控件的位置（例如正中央Gravity.CENTER，下方Gravity.BOTTOM等），可以设置偏移或无偏移
+        popupWindow?.showAtLocation(parentView, Gravity.BOTTOM, 0, 20)
+    }
+
+    private fun addBackground() {
+        // 设置背景颜色变暗
+        val lp:WindowManager.LayoutParams = window.attributes
+        lp.alpha = 0.1f
+        window.attributes = lp
+        //dismiss时恢复原样
+        popupWindow?.setOnDismissListener {
+            val lp1:WindowManager.LayoutParams = window.attributes
+            lp1.alpha = 1f
+            window.attributes = lp
         }
     }
 
