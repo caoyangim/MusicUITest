@@ -27,6 +27,10 @@ import android.view.LayoutInflater
 import android.graphics.drawable.BitmapDrawable
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.cye.musicuitest.adapter.MusicListAdapter
+import com.cye.musicuitest.bean.Song
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private val timer = Timer()
     private var visualizer:Visualizer? = null
     private var isMenu = false
+    private lateinit var musicData:MutableList<Song>
 
     private val PERMISSIONS = arrayOf<String>(
         Manifest.permission.RECORD_AUDIO,
@@ -55,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        val musicData = MusicUtil.getMusicData(this)
+        musicData = MusicUtil.getMusicData(this)
         Log.e("Music",","+musicData[0].toString()+musicData.size)
         btn_list.setOnClickListener {
             showPopupWindow()
@@ -234,10 +239,12 @@ class MainActivity : AppCompatActivity() {
     private fun showPopupWindow() {
         val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vPopupWindow = inflater.inflate(R.layout.pop_music_list, null, false)//引入弹窗布局
+        val rcView = vPopupWindow.findViewById<RecyclerView>(R.id.music_list)
+
         popupWindow = PopupWindow(
             vPopupWindow,
-            ActionBar.LayoutParams.MATCH_PARENT,
-            400,
+            ActionBar.LayoutParams.WRAP_CONTENT,
+            ActionBar.LayoutParams.WRAP_CONTENT,
             true
         )
 
@@ -246,12 +253,15 @@ class MainActivity : AppCompatActivity() {
         //设置进出动画
         popupWindow?.animationStyle = R.style.PopupWindowAnimation
 
-        popupWindow?.setBackgroundDrawable(BitmapDrawable()) // 响应返回键必须的语句
+        popupWindow?.setBackgroundDrawable(resources.getDrawable(R.drawable.pop_bac)) // 响应返回键必须的语句
         //引入依附的布局
         val parentView =
             LayoutInflater.from(this@MainActivity).inflate(R.layout.activity_main, null)
         //相对于父控件的位置（例如正中央Gravity.CENTER，下方Gravity.BOTTOM等），可以设置偏移或无偏移
-        popupWindow?.showAtLocation(parentView, Gravity.BOTTOM, 0, 20)
+        popupWindow?.showAtLocation(parentView, Gravity.BOTTOM, 0, 100)
+
+        rcView.layoutManager = LinearLayoutManager(this)
+        rcView.adapter = MusicListAdapter(musicData)
     }
 
     private fun addBackground() {

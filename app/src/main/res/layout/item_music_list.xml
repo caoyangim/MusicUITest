@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_10">
+
+    <TextView
+        android:id="@+id/item_music"
+        android:layout_width="280dp"
+        tools:text="春夏秋冬"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_close"/>
+
+</LinearLayout>
