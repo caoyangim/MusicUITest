@@ -100,6 +100,7 @@
                 android:layout_marginRight="@dimen/icon_margin_LR"
                 android:src="@drawable/ic_play"/>
             <ImageView
+                android:id="@+id/btn_next"
                 android:layout_width="@dimen/icon_weight"
                 android:layout_height="@dimen/icon_weight"
                 android:layout_marginLeft="@dimen/icon_margin_LR"

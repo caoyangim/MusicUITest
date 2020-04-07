@@ -2,6 +2,7 @@ package com.cye.musicuitest.utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.cye.musicuitest.bean.Song;
@@ -24,6 +25,9 @@ public class MusicUtil {
                 song.setPath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
                 song.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
                 song.setSize(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)));
+                int artID = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                song.setArtId(artID);
+                song.setAlbumArt(MusicUtil.getAlbumArt(context,artID));
                 if (song.getSize() > 1000 * 800) {
                     // 注释部分是切割标题，分离出歌曲名和歌手 （本地媒体库读取的歌曲信息不规范）
                     if (song.getSong().contains("-")) {
@@ -50,5 +54,20 @@ public class MusicUtil {
         } else {
             return time / 1000 / 60 + ":" + time / 1000 % 60;
         }
+    }
+
+    public static String getAlbumArt(Context context,int album_id){
+        String mUriAlbums = "content://media/external/audio/albums";
+        String[] projection = new String[] { "album_art" };
+        Cursor cur = context.getContentResolver().query(Uri.parse(mUriAlbums + "/" + Integer.toString(album_id)),projection, null, null, null);
+        String album_art = null;
+        if (cur.getCount() > 0 && cur.getColumnCount() > 0)
+        {
+            cur.moveToNext();
+            album_art = cur.getString(0);
+        }
+        cur.close();
+        cur = null;
+        return album_art;
     }
 }

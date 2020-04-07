@@ -10,6 +10,7 @@ class MediaPlayerHelp private constructor(val context: Context ) {
     private var path:String? = null
     private lateinit var onMediaPlayerHelperListener:OnMediaPlayerHelperListener
     private lateinit var onErrorListener:OnMediaPlayerHelperErrorListener
+    private var isLooping=false
 
     companion object : SingletonHolder<MediaPlayerHelp, Context>(::MediaPlayerHelp)
 
@@ -35,7 +36,13 @@ class MediaPlayerHelp private constructor(val context: Context ) {
             onErrorListener.onError("地址无效，播放失败")
             false
         }
-        mediaPlayer.isLooping = true
+        if (isLooping){
+            mediaPlayer.isLooping = isLooping
+        }else{
+            mediaPlayer.setOnCompletionListener {
+                onMediaPlayerHelperListener.onCompelet(it)
+            }
+        }
     }
 
 
@@ -78,6 +85,7 @@ class MediaPlayerHelp private constructor(val context: Context ) {
 
     interface OnMediaPlayerHelperListener{
         fun onPrepared(mp:MediaPlayer)
+        fun onCompelet(mp:MediaPlayer)
     }
 
     interface OnMediaPlayerHelperErrorListener{

@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var path:String
     private val timer = Timer()
     private var visualizer:Visualizer? = null
-    private var isMenu = false
     private lateinit var musicData:MutableList<Song>
+    private var currentSong = 0
 
     private val PERMISSIONS = arrayOf<String>(
         Manifest.permission.RECORD_AUDIO,
@@ -61,7 +61,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initData() {
         musicData = MusicUtil.getMusicData(this)
-        Log.e("Music",","+musicData[0].toString()+musicData.size)
+        Log.e("Music",","+musicData[currentSong].toString())
+        path = musicData[currentSong].path
         btn_list.setOnClickListener {
             showPopupWindow()
         }
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     private fun initMediaPlay() {
         val extSD = Environment.getExternalStorageDirectory().path
   //      path = "$extSD/Music/qifengle2.m4a"
-        path = "$extSD/netease/cloudmusic/Music/张学友 - 约定 (live).mp3"
+//        path = "$extSD/netease/cloudmusic/Music/张学友 - 约定 (live).mp3"
         mediaPlayerHelp = MediaPlayerHelp.getInstance(this)
         mediaPlayerHelp.setOnMediaPlayerHelperErrorListener(object : MediaPlayerHelp.OnMediaPlayerHelperErrorListener{
             override fun onError(msg: String) {
@@ -139,6 +140,9 @@ class MainActivity : AppCompatActivity() {
             }else{
                 play()
             }
+        }
+        btn_next.setOnClickListener {
+            playNext()
         }
     }
 
@@ -161,6 +165,15 @@ class MainActivity : AppCompatActivity() {
         playAnima()
     }
 
+    private fun playNext(){
+        stopMusic()
+        currentSong++
+        currentSong %= musicData.size
+        Log.e("Music","CURRENT:${currentSong},"+musicData[currentSong].toString())
+        path = musicData[currentSong].path
+        playMusic(path)
+    }
+
     private fun playMusic(path:String) {
         //音乐
         if (path == mediaPlayerHelp.getPath()){
@@ -171,6 +184,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onPrepared(mp: MediaPlayer) {
                     mediaPlayerHelp.start()
                     initSeekBar()
+                }
+
+                override fun onCompelet(mp: MediaPlayer) {
+                    //playNext()
                 }
             })
         }

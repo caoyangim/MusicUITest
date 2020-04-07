@@ -22,7 +22,11 @@ class Song {
      */
     var size:Long = 0
 
+    var artId:Int = 0
+
+    var albumArt:String? = null
+
     override fun toString(): String {
-        return "song:$song,singer:$singer,path:$path,duration:$duration,size:$size"
+        return "song:$song,singer:$singer,path:$path,duration:$duration,size:$size,artId:${artId},ARTIOCN:$albumArt"
     }
 }
